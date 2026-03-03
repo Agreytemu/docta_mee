@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human-Centric Services | Docta Mee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1e293b; }
+        .nav-gradient { background: linear-gradient(135deg, #064e3b, #059669); }
+
+        .service-card {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Black Hover Effect - Mwanangu staili yetu ile ile */
+        .service-card:hover {
+            background-color: #000000 !important;
+            transform: translateY(-12px);
+            box-shadow: 0 40px 70px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card:hover h3, 
+        .service-card:hover p, 
+        .service-card:hover i,
+        .service-card:hover span {
+            color: #ffffff !important;
+        }
+
+        .service-card:hover .icon-bg {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #side-menu { transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <nav class="nav-gradient text-white p-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-emerald-700">
+                    <i class="fas fa-heartbeat text-2xl"></i>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tight">docta.mee</h1>
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-bold uppercase tracking-wide">
+                <a href="index.html" class="hover:text-emerald-200">Home</a>
+                <a href="services.html" class="text-emerald-200 border-b-2 border-white pb-1">Services</a>
+                <a href="about.html" class="hover:text-emerald-200">About</a>
+                <a href="contact.html" class="hover:text-emerald-200">Contact</a>
+                <a href="management.html" class="bg-white/20 px-4 py-1 rounded-full">Manage Business</a>
+            </div>
+            <button onclick="toggleMenu()" class="lg:hidden text-2xl p-2"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <header class="py-20 px-6 text-center bg-slate-50">
+        <span class="text-xs font-black uppercase tracking-[0.4em] text-emerald-600 mb-4 block">Holistic Care</span>
+        <h2 class="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tighter">Beyond <span class="text-emerald-600 italic">Medicine.</span></h2>
+        <p class="text-slate-500 max-w-2xl mx-auto text-lg font-medium">
+            We don't just treat bodies; we heal minds and restore souls. Explore our specialized psychological and emotional support services.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-32">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            
+            <div class="service-card p-10 rounded-[3.5rem] group cursor-pointer">
+                <div class="icon-bg w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-8 transition-all">
+                    <i class="fas fa-brain text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Mental Health Hub</h3>
+                <p class="text-slate-500 leading-relaxed">Professional support for depression, anxiety, and mental disorders. Our experts help you find your light again in the darkest times.</p>
+            </div>
+
+            <div class="service-card p-10 rounded-[3.5rem] group cursor-pointer border-rose-50">
+                <div class="icon-bg w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-8 transition-all">
+                    <i class="fas fa-heart-broken text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Healing Hearts</h3>
+                <p class="text-slate-500 leading-relaxed">Struggling with a breakup or relationship stress? Get confidential counseling to mend your heart and regain your self-worth.</p>
+            </div>
+
+            <div class="service-card p-10 rounded-[3.5rem] group cursor-pointer">
+                <div class="icon-bg w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-8 transition-all">
+                    <i class="fas fa-compass text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Therapeutic Guidance</h3>
+                <p class="text-slate-500 leading-relaxed">Personalized life coaching to manage daily stress and career-related mental exhaustion. Find your balance.</p>
+            </div>
+
+            <div class="service-card p-10 rounded-[3.5rem] group cursor-pointer">
+                <div class="icon-bg w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-8 transition-all">
+                    <i class="fas fa-user-md text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Virtual Consultations</h3>
+                <p class="text-slate-500 leading-relaxed">Direct access to medical doctors and psychologists worldwide via secure video calls.</p>
+            </div>
+
+            <div class="service-card p-10 rounded-[3.5rem] group cursor-pointer">
+                <div class="icon-bg w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 transition-all">
+                    <i class="fas fa-hospital text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Enterprise Systems</h3>
+                <p class="text-slate-500 leading-relaxed">Digital infrastructure for hospitals and retail pharmacies to manage global health data efficiently.</p>
+            </div>
+
+            <div class="service-card p-10 rounded-[3.5rem] group cursor-pointer">
+                <div class="icon-bg w-16 h-16 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center mb-8 transition-all">
+                    <i class="fas fa-robot text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">24/7 Arr AI Bot</h3>
+                <p class="text-slate-500 leading-relaxed">An intelligent, human-like AI companion for instant health advice and mental wellness check-ins anytime.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-[100]">
+        <div class="relative group">
+            <button class="w-16 h-16 bg-red-600 text-white rounded-full flex items-center justify-center text-2xl shadow-2xl animate-pulse">
+                <i class="fas fa-phone-alt"></i>
+            </button>
+            <div class="absolute bottom-full right-0 mb-4 hidden group-hover:flex flex-col gap-2 bg-white p-3 rounded-2xl shadow-2xl border">
+                <a href="https://wa.me/255740430220" class="bg-green-500 text-white px-4 py-2 rounded-xl text-xs font-bold">WhatsApp</a>
+                <a href="tel:0740430220" class="bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Direct Call</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-slate-900 text-white pt-24 pb-12 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h4 class="text-3xl font-black italic mb-6">docta.mee</h4>
+            <div class="flex justify-center gap-8 mb-10 text-2xl text-white/40">
+                <i class="fab fa-tiktok hover:text-white transition"></i>
+                <i class="fab fa-instagram hover:text-pink-500 transition"></i>
+                <i class="fab fa-twitter hover:text-blue-400 transition"></i>
+                <i class="fab fa-facebook hover:text-blue-600 transition"></i>
+            </div>
+            <p class="text-[9px] text-white/20 uppercase tracking-[0.8em]">Holistic Healthcare Architecture © 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            menu.style.transform = (menu.style.transform === 'translateX(0px)') ? 'translateX(-100%)' : 'translateX(0px)';
+        }
+    </script>
+</body>
+</html>
