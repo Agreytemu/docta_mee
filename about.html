@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Docta Mee Global</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1e293b; }
+        
+        .nav-gradient { background: linear-gradient(135deg, #064e3b, #059669); }
+
+        /* Modern Glass Effect */
+        .glass-vision {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Hero Text Animation */
+        .fade-in { animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .stat-card:hover { transform: scale(1.05); transition: all 0.3s ease; }
+        
+        #side-menu { transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <nav class="nav-gradient text-white p-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-emerald-700">
+                    <i class="fas fa-plus-square text-2xl"></i>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tight underline decoration-emerald-400">docta.mee</h1>
+            </div>
+
+            <div class="hidden lg:flex gap-8 text-sm font-bold uppercase tracking-wide">
+                <a href="index.html" class="hover:text-emerald-200 transition">Home</a>
+                <a href="services.html" class="hover:text-emerald-200 transition">Services</a>
+                <a href="about.html" class="text-emerald-200 border-b-2 border-white pb-1">About</a>
+                <a href="contact.html" class="hover:text-emerald-200 transition">Contact</a>
+                <a href="manage.html" class="bg-white/20 px-4 py-1 rounded-full hover:bg-white/40 transition">Manage Business</a>
+            </div>
+
+            <button onclick="toggleMenu()" class="lg:hidden text-2xl p-2"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div id="side-menu" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-white z-[60] transform -translate-x-full lg:hidden p-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-bold text-emerald-400">NAVIGATE</span>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+        <div class="flex flex-col gap-6 font-semibold">
+            <a href="index.html">Home</a>
+            <a href="services.html">Services</a>
+            <a href="about.html" class="text-emerald-400">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="manage.html">Manage Business</a>
+        </div>
+    </div>
+
+    <section class="relative py-20 px-6 bg-slate-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest">Our Story</span>
+                <h2 class="text-5xl md:text-6xl font-black text-slate-900 mt-6 leading-tight">
+                    Redefining Global <span class="text-emerald-600">Healthcare</span> Accessibility.
+                </h2>
+                <p class="text-slate-500 mt-6 text-lg leading-relaxed">
+                    Docta Mee is more than just a portal; it is a movement. We bridge the gap between complex medical systems and the patients who need them, using cutting-edge technology to ensure health is a right, not a privilege, across the globe.
+                </p>
+            </div>
+            <div class="relative">
+                <div class="w-full h-[400px] bg-emerald-200 rounded-[3rem] overflow-hidden shadow-2xl rotate-3 hover:rotate-0 transition-all duration-500">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80" alt="Medical Tech" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -bottom-6 -left-6 glass-vision p-6 rounded-3xl hidden md:block">
+                    <p class="text-3xl font-black text-emerald-600">24/7</p>
+                    <p class="text-sm font-bold text-slate-400 uppercase">Global Support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-vision p-10 rounded-[2.5rem] border-t-4 border-t-blue-500">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold mb-4">Our Mission</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">To digitize the medical experience for 1 billion people, providing instant clinical reporting and management tools to even the remotest parts of the earth.</p>
+            </div>
+
+            <div class="glass-vision p-10 rounded-[2.5rem] border-t-4 border-t-emerald-500">
+                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold mb-4">Our Vision</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">To become the world's most trusted AI-integrated patient portal, setting the standard for medical privacy and clinical efficiency.</p>
+            </div>
+
+            <div class="glass-vision p-10 rounded-[2.5rem] border-t-4 border-t-red-500">
+                <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold mb-4">Core Values</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">Empathy, Accuracy, and Speed. We believe that every second counts when it comes to human life and medical data management.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-slate-900 text-white py-24 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-4">Why Docta Mee?</h2>
+                <div class="w-20 h-1 bg-emerald-500 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div class="text-center">
+                    <h4 class="text-4xl font-black text-emerald-400 mb-2">99.9%</h4>
+                    <p class="font-bold text-lg">System Uptime</p>
+                    <p class="text-slate-400 text-sm mt-2">Always available for emergencies anywhere.</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="text-4xl font-black text-emerald-400 mb-2">Global</h4>
+                    <p class="font-bold text-lg">Reach</p>
+                    <p class="text-slate-400 text-sm mt-2">Serving patients across Africa, Europe, and Asia.</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="text-4xl font-black text-emerald-400 mb-2">Secure</h4>
+                    <p class="font-bold text-lg">Encryption</p>
+                    <p class="text-slate-400 text-sm mt-2">End-to-end data protection for your privacy.</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="text-4xl font-black text-emerald-400 mb-2">Smart</h4>
+                    <p class="font-bold text-lg">AI Assistant</p>
+                    <p class="text-slate-400 text-sm mt-2">Instant symptom analysis with human-like bot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white pt-24 pb-12 px-6 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <h4 class="text-3xl font-black italic text-slate-900 mb-6">docta.mee</h4>
+                    <p class="text-slate-500 max-w-sm leading-relaxed">
+                        Leading the revolution in digital clinical management. Our portal connects you to high-end medical services with a touch of a button.
+                    </p>
+                </div>
+                <div>
+                    <h5 class="font-black text-slate-900 mb-6 uppercase text-xs tracking-widest">Shortcuts</h5>
+                    <ul class="space-y-4 text-sm text-slate-500 font-semibold">
+                        <li><a href="index.html" class="hover:text-emerald-600">Home Portal</a></li>
+                        <li><a href="services.html" class="hover:text-emerald-600">Medical Services</a></li>
+                        <li><a href="manage.html" class="hover:text-emerald-600">Business Login</a></li>
+                        <li><a href="bot.html" class="hover:text-emerald-600">Talk to Arr AI</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-black text-slate-900 mb-6 uppercase text-xs tracking-widest">Connect With Us</h5>
+                    <div class="grid grid-cols-3 gap-4">
+                        <a href="#" class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-black hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-pink-600 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-blue-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-red-600 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-blue-800 hover:text-white transition"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/255740430220" class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-green-500 hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-slate-400 text-[10px] font-bold tracking-[0.4em] uppercase">© 2026 DOCTA MEE GLOBAL SYSTEMS</p>
+                <div class="flex gap-8 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="tel:0740430220" class="fixed bottom-6 right-6 w-16 h-16 bg-red-600 text-white rounded-full flex items-center justify-center text-2xl shadow-2xl z-[100] animate-pulse">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            if (menu.style.transform === 'translateX(0px)') {
+                menu.style.transform = 'translateX(-100%)';
+            } else {
+                menu.style.transform = 'translateX(0px)';
+            }
+        }
+    </script>
+</body>
+</html>
