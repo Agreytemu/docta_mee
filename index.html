@@ -3,167 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docta Mee | Official Medical Portal</title>
+    <title>Docta Mee | Patient Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfdfe; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
         
-        /* Smooth Moving Gradient for Header */
-        .moving-gradient {
-            background: linear-gradient(-45deg, #064e3b, #059669, #1e40af, #2563eb);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+        .nav-gradient {
+            background: linear-gradient(135deg, #064e3b, #059669);
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .glass-ads {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* Shadow Glasses Effect (Soft Depth) */
-        .glass-ui {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        /* Hover Black Effect for Tiles */
+        .tile-card {
+            background: #ffffff;
+            transition: all 0.4s ease;
+            border: 1px solid #f1f5f9;
         }
+        .tile-card:hover {
+            background: #000000 !important;
+            color: #ffffff !important;
+            transform: translateY(-5px);
+        }
+        .tile-card:hover p { color: #94a3b8; }
 
-        .action-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 30px 60px rgba(37, 99, 235, 0.1);
+        /* Side Menu Animation */
+        #side-menu { transition: transform 0.3s ease-in-out; }
+
+        .floating-btn {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
 
-    <header class="moving-gradient text-white pb-32 pt-6 px-6">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <nav class="nav-gradient text-white p-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/30">
-                    <i class="fas fa-notes-medical text-white text-xl"></i>
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-emerald-700 shadow-inner">
+                    <i class="fas fa-plus-square text-2xl"></i>
                 </div>
-                <h1 class="text-2xl font-extrabold tracking-tighter italic">docta.mee</h1>
-            </div>
-            
-            <div class="hidden lg:flex gap-8 text-sm font-semibold opacity-90">
-                <a href="#" class="hover:text-emerald-300">Home</a>
-                <a href="#" class="hover:text-emerald-300">Services</a>
-                <a href="#" class="hover:text-emerald-300">About</a>
-                <a href="#" class="hover:text-emerald-300">Contact</a>
+                <h1 class="text-xl font-extrabold tracking-tight">Docta Mee <span class="font-light opacity-80 text-sm hidden sm:inline">| Patient Portal</span></h1>
             </div>
 
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden sm:block">
-                    <p class="text-xs opacity-70">Authenticated User</p>
-                    <p class="text-sm font-bold">Agrey Temu</p>
-                </div>
-                <img src="https://ui-avatars.com/api/?name=Agrey+Temu&background=fff&color=059669" class="w-12 h-12 rounded-2xl border-2 border-white/50 shadow-lg">
+            <div class="hidden lg:flex gap-6 text-sm font-bold uppercase tracking-wide">
+                <a href="index.html" class="hover:text-emerald-200 transition">Home</a>
+                <a href="services.html" class="hover:text-emerald-200 transition">Services</a>
+                <a href="about.html" class="hover:text-emerald-200 transition">About</a>
+                <a href="contact.html" class="hover:text-emerald-200 transition">Contact</a>
+                <a href="manage.html" class="bg-white/20 px-4 py-1 rounded-full hover:bg-white/40 transition">Manage Business</a>
             </div>
+
+            <button onclick="toggleMenu()" class="lg:hidden text-2xl p-2">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </header>
+    </nav>
 
-    <main class="max-w-6xl mx-auto px-6 -mt-20">
+    <div id="side-menu" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-white z-[60] transform -translate-x-full lg:hidden p-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-bold text-emerald-400">MENU</span>
+            <button onclick="toggleMenu()" class="text-2xl">&times;</button>
+        </div>
+        <div class="flex flex-col gap-6 font-semibold">
+            <a href="index.html" class="hover:text-emerald-400">Home</a>
+            <a href="services.html" class="hover:text-emerald-400">Services</a>
+            <a href="about.html" class="hover:text-emerald-400">About</a>
+            <a href="contact.html" class="hover:text-emerald-400">Contact</a>
+            <hr class="border-white/10">
+            <a href="manage.html" class="text-emerald-400">Manage Business</a>
+        </div>
+    </div>
+
+    <main class="max-w-5xl mx-auto p-6 md:pt-10">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            <div class="glass-ui p-8 rounded-[2.5rem] relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition">
-                    <i class="fas fa-network-wired text-8xl"></i>
-                </div>
-                <h3 class="text-blue-600 font-bold text-xs uppercase tracking-[0.2em] mb-2">Connected Module</h3>
-                <h2 class="text-2xl font-extrabold text-slate-800">API Gateway</h2>
-                <p class="text-slate-500 mt-2 mb-6">Secure real-time sync with global medical databases.</p>
-                <div class="flex gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">System Active</span>
-                </div>
-            </div>
-
-            <div class="glass-ui p-8 rounded-[2.5rem] bg-emerald-50/30 border-emerald-100/50">
-                <h3 class="text-emerald-600 font-bold text-xs uppercase tracking-[0.2em] mb-2">Greeting</h3>
-                <h2 class="text-2xl font-extrabold text-slate-800 italic">"Utaweka neno lako hapa..."</h2>
-                <p class="text-slate-500 mt-2">Welcome to the future of personalized healthcare delivery.</p>
+        <div class="glass-ads rounded-2xl p-4 mb-10 text-center border-dashed border-2 border-emerald-200">
+            <p class="text-xs font-bold text-emerald-700 uppercase tracking-[0.3em]">Featured Advertisement</p>
+            <div class="h-12 flex items-center justify-center italic text-slate-400 text-sm">
+                Ads will appear here after registration...
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            <div class="lg:col-span-7 space-y-6">
-                <div class="action-card glass-ui p-6 rounded-3xl flex items-center gap-6 cursor-pointer transition-all">
-                    <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
-                        <i class="fas fa-tasks text-2xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-slate-800">Manage Patient Balance</h4>
-                        <p class="text-sm text-slate-400 italic">Manage and report content professionally.</p>
-                    </div>
-                    <i class="fas fa-chevron-right ml-auto text-slate-300"></i>
-                </div>
+        <section class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Welcome to Docta Mee</h2>
+            <p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
+                Your trusted partner in professional healthcare management. Experience seamless access to clinical services and medical data.
+            </p>
+        </section>
 
-                <div class="action-card glass-ui p-6 rounded-3xl flex items-center gap-6 cursor-pointer transition-all">
-                    <div class="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-200">
-                        <i class="fas fa-stethoscope text-2xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-slate-800">Visit Specialized Services</h4>
-                        <p class="text-sm text-slate-400 italic">Access premium healthcare facilities.</p>
-                    </div>
-                    <i class="fas fa-chevron-right ml-auto text-slate-300"></i>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+            <a href="manage.html" class="tile-card p-10 rounded-[2.5rem] shadow-sm flex flex-col items-center text-center group">
+                <div class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition">
+                    <i class="fas fa-briefcase-medical text-3xl text-blue-600 group-hover:text-white"></i>
                 </div>
+                <h3 class="text-2xl font-bold mb-2">Manage Business</h3>
+                <p class="text-slate-500">Professional clinical content management and reporting portal.</p>
+            </a>
 
-                <a href="tel:999" class="block w-full bg-slate-900 hover:bg-red-600 p-8 rounded-[2.5rem] text-white transition-all duration-500 group relative overflow-hidden shadow-2xl">
-                    <div class="relative z-10 flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-bold text-white/50 uppercase tracking-widest mb-1">24/7 Immediate Response</p>
-                            <h3 class="text-2xl font-extrabold">Online Loss Call</h3>
-                        </div>
-                        <i class="fas fa-phone-alt text-3xl animate-bounce"></i>
-                    </div>
-                    <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:bg-red-400"></div>
-                </a>
-            </div>
-
-            <div class="lg:col-span-5">
-                <div class="bg-white rounded-[3rem] p-1 shadow-[0_40px_100px_rgba(0,0,0,0.07)] border border-slate-100 overflow-hidden">
-                    <div class="p-8 pb-4">
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-emerald-500 rounded-full flex items-center justify-center text-white text-2xl shadow-inner">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-extrabold text-slate-800">Arr AI Assistant</h4>
-                                <p class="text-xs text-green-500 font-bold uppercase tracking-tighter"><i class="fas fa-circle text-[8px] mr-1"></i> Human-Like Intelligence</p>
-                            </div>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-2xl mb-4">
-                            <p class="text-sm text-slate-600 leading-relaxed italic">"Welcome Agrey. I've analyzed your recent reports. How can I assist your health journey today?"</p>
-                        </div>
-                    </div>
-                    <div class="p-2">
-                        <div class="bg-slate-900 rounded-[2rem] p-4 flex items-center gap-3">
-                            <input type="text" placeholder="Describe how you feel..." class="bg-transparent border-none focus:ring-0 text-white text-sm w-full placeholder:text-white/30">
-                            <button class="bg-white text-slate-900 w-10 h-10 rounded-xl flex items-center justify-center hover:bg-emerald-400 transition">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
+            <a href="services.html" class="tile-card p-10 rounded-[2.5rem] shadow-sm flex flex-col items-center text-center group">
+                <div class="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition">
+                    <i class="fas fa-clinic-medical text-3xl text-emerald-600 group-hover:text-white"></i>
                 </div>
-            </div>
+                <h3 class="text-2xl font-bold mb-2">Visit Services</h3>
+                <p class="text-slate-500">Browse and access available medical services and specialist consultations.</p>
+            </a>
         </div>
     </main>
 
-    <footer class="mt-20 py-12 border-t border-slate-100 text-center">
-        <p class="text-slate-400 text-xs font-semibold tracking-widest uppercase mb-4">Official Healthcare Management System</p>
-        <div class="flex justify-center gap-6 text-slate-300">
-            <i class="fab fa-linkedin hover:text-blue-600 transition cursor-pointer"></i>
-            <i class="fab fa-twitter hover:text-blue-400 transition cursor-pointer"></i>
-            <i class="fas fa-shield-alt hover:text-green-500 transition cursor-pointer"></i>
+    <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-[100]">
+        <div class="relative group">
+            <div class="absolute bottom-full right-0 mb-4 hidden group-hover:flex flex-col gap-2 bg-white p-2 rounded-2xl shadow-2xl border">
+                <a href="https://wa.me/255740430220" class="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-xl text-sm font-bold">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="tel:0740430220" class="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold">
+                    <i class="fas fa-phone"></i> Call Now
+                </a>
+            </div>
+            <button class="w-16 h-16 bg-red-600 text-white rounded-full flex items-center justify-center text-2xl floating-btn animate-pulse">
+                <i class="fas fa-phone-alt"></i>
+            </button>
         </div>
-        <p class="mt-8 text-[10px] text-slate-300">© 2026 DOCTA MEE. PRIVACY ENCRYPTED.</p>
+
+        <a href="bot.html" class="w-16 h-16 bg-white border-4 border-emerald-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden floating-btn hover:scale-110 transition">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Bot" class="w-10 h-10">
+        </a>
+    </div>
+
+    <footer class="bg-slate-50 pt-20 pb-10 px-6 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+                <div class="text-center md:text-left">
+                    <h4 class="text-2xl font-black text-slate-800 italic">docta.mee</h4>
+                    <p class="text-sm text-slate-400 mt-2 italic font-medium">Professionalism & Care Beyond Boundaries</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-6 text-2xl text-slate-400">
+                    <a href="#" class="hover:text-black transition"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="hover:text-pink-600 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-red-600 transition"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="hover:text-blue-800 transition"><i class="fab fa-facebook"></i></a>
+                    <a href="https://wa.me/255740430220" class="hover:text-green-500 transition"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="text-center text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em]">
+                &copy; 2026 DOCTA MEE PATIENT PORTAL. ALL RIGHTS RESERVED.
+            </div>
+        </div>
     </footer>
 
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            if (menu.style.transform === 'translateX(0px)') {
+                menu.style.transform = 'translateX(-100%)';
+            } else {
+                menu.style.transform = 'translateX(0px)';
+            }
+        }
+    </script>
 </body>
 </html>
