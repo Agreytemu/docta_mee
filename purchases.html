@@ -117,7 +117,7 @@
                             </tr>
                         </thead>
                         <tbody id="purchase-log" class="text-xs font-bold divide-y divide-white/5">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -138,7 +138,6 @@
             loadLogs();
         }
 
-        // MAUJANJA: Piga hesabu wakati anajaza
         function calculateStats() {
             const cost = parseFloat(document.getElementById('p-cost').value) || 0;
             const price = parseFloat(document.getElementById('p-price').value) || 0;
@@ -156,40 +155,47 @@
         document.getElementById('purchase-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Synchronizing Nodes...`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Syncing Node...`;
             btn.disabled = true;
 
-            const name = document.getElementById('p-name').value;
+            const rawName = document.getElementById('p-name').value;
+            const name = rawName.trim().toLowerCase(); // USALAMA: Herufi ndogo tu stoo
             const cost = parseFloat(document.getElementById('p-cost').value);
             const price = parseFloat(document.getElementById('p-price').value);
             const qty = parseInt(document.getElementById('p-qty').value);
 
             try {
-                // STEP 1: Tafuta kama bidhaa ipo Inventory
+                // 1. TAFUTA IDADI ILIYOPO (Kama ipo)
                 const { data: existing } = await _supabase
                     .from('inventory')
-                    .select('*')
+                    .select('quantity')
                     .eq('name', name)
                     .eq('owner_email', userEmail)
                     .single();
 
-                if(existing) {
-                    // Update Quantity & Price
-                    await _supabase.from('inventory').update({
-                        quantity: existing.quantity + qty,
-                        price: price,
-                        cost_price: cost
-                    }).eq('id', existing.id);
-                } else {
-                    // Insert New Product
-                    await _supabase.from('inventory').insert([{
-                        name, quantity: qty, price, cost_price: cost, owner_email: userEmail
-                    }]);
+                let updatedQty = qty;
+                if (existing) {
+                    updatedQty = parseInt(existing.quantity) + qty;
                 }
 
-                // STEP 2: Tunza log ya Purchase
+                // 2. SMART UPSERT (Insert if new, Update if exists)
+                const { error: invError } = await _supabase
+                    .from('inventory')
+                    .upsert({
+                        name: name,
+                        quantity: updatedQty,
+                        price: price,
+                        cost_price: cost,
+                        owner_email: userEmail,
+                        status: 'active',
+                        last_restocked: new Date().toISOString()
+                    }, { onConflict: 'name, owner_email' });
+
+                if (invError) throw invError;
+
+                // 3. LOG THE PURCHASE
                 await _supabase.from('purchases').insert([{
-                    product_name: name,
+                    product_name: rawName,
                     quantity: qty,
                     cost_price: cost,
                     total_cost: cost * qty,
@@ -198,8 +204,8 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: 'Sync Success',
-                    text: 'Inventory updated across all nodes!',
+                    title: 'Inventory Synchronized',
+                    text: 'Stock levels updated successfully!',
                     background: '#0f172a',
                     color: '#fff',
                     confirmButtonColor: '#10b981'
@@ -211,7 +217,7 @@
 
             } catch (err) {
                 console.error(err);
-                alert("Critical Sync Error!");
+                Swal.fire({ icon: 'error', title: 'Sync Failed', text: err.message, background: '#0f172a', color: '#fff' });
             } finally {
                 btn.innerHTML = `Confirm & Sync to Inventory <i class="fas fa-arrow-right ml-2"></i>`;
                 btn.disabled = false;
