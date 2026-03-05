@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Terminal | Docta Mee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: #f8fafc; }
+        .sidebar { background: #0b1222; border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { transition: 0.3s; border-radius: 1rem; color: #94a3b8; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .input-field { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; padding: 1rem; color: white; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.1); }
+        .purchase-card { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 2rem; }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <aside class="sidebar w-72 fixed h-full flex flex-col p-6 z-50">
+        <div class="mb-10 flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
+                <i class="fas fa-cart-plus text-white"></i>
+            </div>
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">docta.mee</h1>
+        </div>
+        <nav class="flex-1 space-y-1">
+            <a href="dashboard.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-th-large w-5"></i> DASHBOARD HUB</a>
+            <a href="sales.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-cash-register w-5"></i> SALES TERMINAL</a>
+            <a href="inventory.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-boxes-stacked w-5"></i> INVENTORY</a>
+            <a href="purchases.html" class="nav-link active flex items-center gap-4 p-4 font-black text-xs text-emerald-400"><i class="fas fa-truck-loading w-5"></i> PURCHASES</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 ml-72 p-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-2xl font-black italic uppercase tracking-tighter">Stock Acquisition</h2>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Purchase Entry & Supplier Logging</p>
+            </div>
+            <div class="bg-emerald-500/10 border border-emerald-500/20 px-6 py-3 rounded-2xl">
+                <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">System Status</p>
+                <p class="text-xs font-bold">Encrypted & Secure</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 purchase-card p-8">
+                <h4 class="font-black text-xs uppercase text-emerald-500 mb-8 italic tracking-widest border-b border-white/5 pb-4">New Entry Node</h4>
+                
+                <form id="purchase-form" class="space-y-5">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2">Product Name</label>
+                        <input type="text" id="p-name" class="input-field text-sm" placeholder="e.g. Panadol Extra" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[9px] font-black text-slate-500 uppercase ml-2">Buying Price</label>
+                            <input type="number" id="p-cost" class="input-field text-sm" placeholder="Cost" required>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[9px] font-black text-slate-500 uppercase ml-2">Selling Price</label>
+                            <input type="number" id="p-price" class="input-field text-sm" placeholder="Market" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2">Quantity Received</label>
+                        <input type="number" id="p-qty" class="input-field text-sm" placeholder="0.00" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2">Supplier (Optional)</label>
+                        <input type="text" id="p-supplier" class="input-field text-sm" placeholder="Supplier Name">
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 py-4 rounded-2xl font-black text-xs uppercase transition-all shadow-lg shadow-emerald-500/10 mt-4">
+                        Complete Purchase Sync
+                    </button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 purchase-card p-8">
+                <h4 class="font-black text-xs uppercase text-white mb-8 italic tracking-widest border-b border-white/5 pb-4">Acquisition History</h4>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[9px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5">
+                                <th class="pb-4">Timestamp</th>
+                                <th class="pb-4">Product</th>
+                                <th class="pb-4">Qty</th>
+                                <th class="pb-4">Total Cost</th>
+                                <th class="pb-4">Supplier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchase-log" class="text-xs font-bold divide-y divide-white/5">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const SUPABASE_URL = "https://lhviiczzlctaocngofbq.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+
+        async function init() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if(!user) { window.location.href = "login_retail.html"; return; }
+            currentUser = user;
+            loadPurchaseHistory();
+        }
+
+        document.getElementById('purchase-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Synchronizing...";
+            btn.disabled = true;
+
+            const name = document.getElementById('p-name').value;
+            const cost = parseFloat(document.getElementById('p-cost').value);
+            const price = parseFloat(document.getElementById('p-price').value);
+            const qty = parseInt(document.getElementById('p-qty').value);
+            const supplier = document.getElementById('p-supplier').value;
+
+            try {
+                // 1. Check if product exists in Inventory
+                const { data: existing } = await _supabase
+                    .from('inventory')
+                    .select('*')
+                    .eq('name', name)
+                    .eq('owner_email', currentUser.email)
+                    .single();
+
+                if (existing) {
+                    // Update existing
+                    await _supabase.from('inventory').update({
+                        quantity: existing.quantity + qty,
+                        price: price, // Update to latest selling price
+                        cost_price: cost // Track buying price
+                    }).eq('id', existing.id);
+                } else {
+                    // Insert new
+                    await _supabase.from('inventory').insert([{
+                        name, quantity: qty, price, cost_price: cost, owner_email: currentUser.email
+                    }]);
+                }
+
+                // 2. Log into Purchases table for reporting
+                await _supabase.from('purchases').insert([{
+                    product_name: name,
+                    quantity: qty,
+                    cost_price: cost,
+                    total_cost: cost * qty,
+                    supplier: supplier,
+                    owner_email: currentUser.email
+                }]);
+
+                alert("Purchase successfully synced to Global Inventory!");
+                e.target.reset();
+                loadPurchaseHistory();
+
+            } catch (err) {
+                console.error(err);
+                alert("Sync Failed. Check Database connection.");
+            } finally {
+                btn.innerText = "Complete Purchase Sync";
+                btn.disabled = false;
+            }
+        });
+
+        async function loadPurchaseHistory() {
+            const { data: purchases } = await _supabase
+                .from('purchases')
+                .select('*')
+                .eq('owner_email', currentUser.email)
+                .order('created_at', { ascending: false })
+                .limit(10);
+
+            const log = document.getElementById('purchase-log');
+            log.innerHTML = '';
+            
+            purchases?.forEach(p => {
+                const date = new Date(p.created_at).toLocaleDateString();
+                log.innerHTML += `
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="py-4 text-slate-500">${date}</td>
+                        <td class="py-4 uppercase">${p.product_name}</td>
+                        <td class="py-4 text-emerald-400">${p.quantity}</td>
+                        <td class="py-4">TZS ${p.total_cost.toLocaleString()}</td>
+                        <td class="py-4 text-slate-500">${p.supplier || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
