@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retail Registration | Docta Mee Enterprise</title>
+    <title>Retail Infrastructure | Docta Mee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -15,10 +14,10 @@
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
         .input-field { background: #f1f5f9; border: 2px solid transparent; transition: all 0.3s ease; }
         .input-field:focus { background: #ffffff; border-color: #10b981; outline: none; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
-        #mobile-menu { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .menu-open { transform: translateX(0) !important; }
-
-        /* Spinner for loading state */
+        
+        /* Captcha Styling */
+        #captchaCanvas { background: #e2e8f0; border-radius: 12px; letter-spacing: 8px; font-weight: 900; font-style: italic; text-decoration: line-through; user-select: none; }
+        
         .loader { border-top-color: #10b981; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -29,107 +28,137 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <i class="fas fa-cart-shopping text-xl"></i>
+                    <i class="fas fa-shield-halved text-xl"></i>
                 </div>
-                <h1 class="text-xl font-black italic">docta.mee <span class="text-emerald-400 not-italic">Retail</span></h1>
+                <h1 class="text-xl font-black italic">docta.mee <span class="text-emerald-400 not-italic">Security</span></h1>
             </div>
-            <div class="hidden lg:flex gap-8 text-[11px] font-black uppercase tracking-widest">
-                <a href="index.html" class="hover:text-emerald-400">Portal Home</a>
-                <a href="services.html" class="hover:text-emerald-400">Solutions</a>
-                <a href="contact.html" class="hover:text-emerald-400">Support</a>
-            </div>
-            <button onclick="toggleSidebar()" class="lg:hidden text-2xl"><i class="fas fa-bars-staggered"></i></button>
+            <a href="login_retail.html" class="text-[10px] font-black border border-emerald-500/30 px-4 py-2 rounded-lg hover:bg-emerald-500 transition">LOGIN ACCESS</a>
         </div>
     </nav>
 
     <main class="flex-grow flex items-center justify-center p-6 py-20">
-        <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
-            <div class="hidden lg:block">
-                <span class="text-emerald-600 font-black uppercase tracking-[0.3em] text-xs">Global Infrastructure</span>
-                <h2 class="text-5xl font-black text-slate-900 mt-4 mb-6 leading-tight">Scale Your <br> <span class="text-emerald-600 italic">Retail Network.</span></h2>
-                <p class="text-slate-500 font-medium leading-relaxed mb-8">
-                    Access real-time inventory tracking, multi-currency POS systems, and automated financial reporting.
-                </p>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-4 text-slate-700 font-bold">
-                        <i class="fas fa-check-circle text-emerald-500 text-xl"></i>
-                        <span>End-to-End Encryption</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card p-10 md:p-14 rounded-[3rem] shadow-2xl border border-slate-200">
-                <div class="mb-10 text-center lg:text-left">
-                    <h3 class="text-3xl font-black text-slate-900">Initialize Account</h3>
-                    <p id="form-status" class="text-slate-400 text-sm font-semibold mt-2">Setup your retail management dashboard.</p>
+        <div class="max-w-xl w-full">
+            <div class="glass-card p-8 md:p-12 rounded-[3rem] shadow-2xl border border-slate-200">
+                <div class="mb-8 text-center">
+                    <h3 class="text-3xl font-black text-slate-900 tracking-tighter">CREATE INFRASTRUCTURE</h3>
+                    <p id="form-status" class="text-slate-400 text-xs font-bold mt-2 uppercase">Official Enterprise Deployment</p>
                 </div>
 
-                <form id="signup-form" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form id="signup-form" class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 ml-1">Business Name</label>
-                            <input type="text" id="biz_name" placeholder="Global Retail Ltd" required class="input-field w-full p-4 rounded-2xl">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Business Name</label>
+                            <input type="text" id="biz_name" required class="input-field w-full p-4 rounded-2xl text-sm font-bold">
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 ml-1">Business Category</label>
-                            <select id="biz_category" class="input-field w-full p-4 rounded-2xl appearance-none cursor-pointer">
-                                <option>Pharmacy / Medical Store</option>
-                                <option>General Supermarket</option>
-                                <option>normal shops</option>
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Category</label>
+                            <select id="biz_category" class="input-field w-full p-4 rounded-2xl text-sm font-bold appearance-none">
+                                <option>Pharmacy</option>
+                                <option>Supermarket</option>
+                                <option>Normal Shops</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 ml-1">Official Email Address</label>
-                        <input type="email" id="email" placeholder="admin@business.com" required class="input-field w-full p-4 rounded-2xl">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Admin Email Address</label>
+                        <input type="email" id="email" required class="input-field w-full p-4 rounded-2xl text-sm font-bold">
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 ml-1">Secure Password</label>
-                        <input type="password" id="password" placeholder="put strong password" required class="input-field w-full p-4 rounded-2xl">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Secure Password</label>
+                        <div class="relative">
+                            <input type="text" id="password" required class="input-field w-full p-4 rounded-2xl text-sm font-bold pr-24">
+                            <div class="absolute right-2 top-2 flex gap-1">
+                                <button type="button" onclick="generatePass()" class="bg-slate-800 text-white text-[9px] px-3 py-2 rounded-xl font-bold hover:bg-emerald-600">GEN</button>
+                                <button type="button" onclick="copyPass()" class="bg-slate-200 text-slate-800 text-[9px] px-3 py-2 rounded-xl font-bold hover:bg-white"><i class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-[9px] text-red-500 font-bold mt-1 ml-1 tracking-widest uppercase">Warning: You cannot login without a signed account!</p>
+                    </div>
+
+                    <div class="bg-slate-100 p-6 rounded-[2rem] border-2 border-dashed border-slate-200">
+                        <label class="text-[10px] font-black uppercase text-slate-500 block mb-3 text-center tracking-[0.2em]">Anti-Robot Security Verification</label>
+                        <div class="flex flex-col items-center gap-4">
+                            <div id="captchaCanvas" class="px-8 py-4 text-2xl font-black italic text-slate-700 select-none pointer-events-none">
+                                </div>
+                            <input type="text" id="captchaInput" placeholder="Type the distorted code above" required 
+                                class="input-field w-full p-4 rounded-2xl text-center text-sm font-black border-2 border-emerald-500/20">
+                            <button type="button" onclick="initCaptcha()" class="text-[9px] font-bold text-slate-400 hover:text-emerald-500"><i class="fas fa-sync"></i> REFRESH SECURITY CODE</button>
+                        </div>
                     </div>
 
                     <div class="pt-4">
                         <button type="submit" id="submit-btn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all duration-300 flex items-center justify-center gap-3">
-                            <span id="btn-text">Create Infrastructure</span>
+                            <span id="btn-text">Deploy Infrastructure</span>
                             <div id="btn-loader" class="hidden loader w-5 h-5 border-2 border-white rounded-full"></div>
                         </button>
                     </div>
 
-                    <p class="text-center text-xs text-slate-400 font-bold mt-6">
-                        Already registered? <a href="login_retail.html" class="text-emerald-600 hover:underline">Log In to Dashboard</a>
+                    <p class="text-center text-[10px] text-slate-400 font-bold mt-4 uppercase tracking-widest">
+                        Critical Access Only? <a href="login_retail.html" class="text-emerald-600 hover:underline">Sign In Here</a>
                     </p>
                 </form>
             </div>
         </div>
     </main>
 
-    <footer class="p-10 text-center border-t border-slate-100">
-        <p class="text-[9px] text-slate-300 font-black uppercase tracking-[0.8em]">End-to-End Secure Registration © 2026 DOCTA MEE</p>
-    </footer>
-
     <script>
-        // SUPABASE CONFIGURATION
         const SUPABASE_URL = "https://lhviiczzlctaocngofbq.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
-        
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const signupForm = document.getElementById('signup-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const btnText = document.getElementById('btn-text');
-        const btnLoader = document.getElementById('btn-loader');
-        const statusText = document.getElementById('form-status');
+        let currentCaptcha = "";
 
+        // 1. GENERATE PASSWORD
+        function generatePass() {
+            const charset = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*";
+            let retVal = "";
+            for (let i = 0; i < 14; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            document.getElementById("password").value = retVal;
+        }
+
+        // 2. COPY PASSWORD
+        function copyPass() {
+            const passInput = document.getElementById("password");
+            passInput.select();
+            document.execCommand("copy");
+            alert("Password Copied! Keep it safe.");
+        }
+
+        // 3. ULTRA CAPTCHA SYSTEM
+        function initCaptcha() {
+            const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+            let code = "";
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptcha = code;
+            document.getElementById("captchaCanvas").innerText = code;
+        }
+
+        // 4. FORM SUBMISSION
+        const signupForm = document.getElementById('signup-form');
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // UI Loading State
+            const userCaptcha = document.getElementById('captchaInput').value.toUpperCase();
+            if (userCaptcha !== currentCaptcha) {
+                alert("ROBOT DETECTED: Security code is incorrect!");
+                initCaptcha();
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnLoader = document.getElementById('btn-loader');
+            const statusText = document.getElementById('form-status');
+
             submitBtn.disabled = true;
             btnLoader.classList.remove('hidden');
-            btnText.innerText = "Processing...";
+            btnText.innerText = "Authenticating...";
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -137,47 +166,31 @@
             const bizCategory = document.getElementById('biz_category').value;
 
             try {
-                // 1. Sign up user in Supabase Auth
-                const { data: authData, error: authError } = await _supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                });
-
+                const { data, error: authError } = await _supabase.auth.signUp({ email, password });
                 if (authError) throw authError;
 
-                // 2. Insert business details into retail_registrations table
-                const { error: dbError } = await _supabase
-                    .from('retail_registrations')
-                    .insert([
-                        { 
-                            business_name: bizName, 
-                            category: bizCategory, 
-                            email: email 
-                        }
-                    ]);
-
+                const { error: dbError } = await _supabase.from('retail_registrations').insert([
+                    { business_name: bizName, category: bizCategory, email: email }
+                ]);
                 if (dbError) throw dbError;
 
-                // SUCCESS: Notify and Redirect
-                statusText.innerText = "Account Created! Redirecting to Login...";
+                statusText.innerText = "DEPLOYMENT SUCCESSFUL! REDIRECTING...";
                 statusText.classList.replace('text-slate-400', 'text-emerald-500');
                 
-                setTimeout(() => {
-                    window.location.href = "login.html"; // Mpeleke Login Page
-                }, 2000);
+                setTimeout(() => { window.location.href = "login_retail.html"; }, 2000);
 
             } catch (error) {
-                statusText.innerText = "Error: " + error.message;
+                statusText.innerText = "CRITICAL ERROR: " + error.message;
                 statusText.classList.replace('text-slate-400', 'text-red-500');
                 submitBtn.disabled = false;
                 btnLoader.classList.add('hidden');
                 btnText.innerText = "Try Again";
+                initCaptcha();
             }
         });
 
-        function toggleSidebar() {
-            document.getElementById('mobile-menu').classList.toggle('menu-open');
-        }
+        // Start Captcha on Load
+        window.onload = initCaptcha;
     </script>
 </body>
 </html>
