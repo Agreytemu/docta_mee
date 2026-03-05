@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Intelligence | Docta Mee</title>
+    <title>Stock Acquisition | Docta Mee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: #f8fafc; overflow-x: hidden; }
         .sidebar { background: #0b1222; border-right: 1px solid rgba(255,255,255,0.05); }
         .nav-link { transition: 0.3s; border-radius: 1rem; color: #94a3b8; cursor: pointer; }
         .nav-link:hover, .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .glass-panel { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 2rem; }
-        .search-bar { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 0.8rem 1.5rem; color: white; outline: none; transition: 0.3s; width: 100%; }
-        .search-bar:focus { border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
-        .action-btn { transition: 0.2s; cursor: pointer; }
-        .action-btn:hover { transform: scale(1.1); }
+        .input-node { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 1.25rem; padding: 1rem; color: white; outline: none; transition: 0.3s; width: 100%; }
+        .input-node:focus { border-color: #10b981; background: #1e293b; box-shadow: 0 0 20px rgba(16, 185, 129, 0.05); }
+        .glass-card { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 2.5rem; }
+        .sync-badge { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
 <body class="min-h-screen flex">
@@ -26,194 +27,223 @@
     <aside class="sidebar w-72 fixed h-full flex flex-col p-6 z-50">
         <div class="mb-10 flex items-center gap-3">
             <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                <i class="fas fa-boxes-stacked text-white"></i>
+                <i class="fas fa-truck-fast text-white"></i>
             </div>
             <h1 class="text-xl font-black italic tracking-tighter uppercase">docta.mee</h1>
         </div>
         <nav class="flex-1 space-y-1">
-            <a href="dashboard.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-th-large w-5"></i> DASHBOARD HUB</a>
-            <a href="sales.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-cash-register w-5"></i> SALES TERMINAL</a>
-            <a href="inventory.html" class="nav-link active flex items-center gap-4 p-4 font-black text-xs text-emerald-400"><i class="fas fa-boxes-stacked w-5"></i> INVENTORY HUB</a>
-            <a href="purchases.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-truck-loading w-5"></i> NEW PURCHASES</a>
+            <a href="dashboard.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-th-large w-5"></i> DASHBOARD</a>
+            <a href="sales.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-cash-register w-5"></i> SALES</a>
+            <a href="inventory.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-boxes-stacked w-5"></i> INVENTORY</a>
+            <a href="purchases.html" class="nav-link active flex items-center gap-4 p-4 font-black text-xs text-emerald-400"><i class="fas fa-cart-plus w-5"></i> PURCHASES</a>
         </nav>
     </aside>
 
     <main class="flex-1 ml-72 p-8">
         <header class="flex justify-between items-center mb-10">
             <div>
-                <h2 class="text-2xl font-black italic uppercase tracking-tighter">Inventory Control</h2>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Manage Stock, Pricing & Global Assets</p>
+                <h2 class="text-3xl font-black italic uppercase tracking-tighter">Stock Entry Node</h2>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Synchronizing Purchases with Global Inventory</p>
             </div>
-            <div class="flex items-center gap-4 w-1/3">
-                <i class="fas fa-search text-slate-500 absolute ml-4"></i>
-                <input type="text" id="inventory-search" onkeyup="searchInventory()" class="search-bar pl-12 text-xs font-bold" placeholder="Search product name...">
+            <div id="sync-status" class="flex items-center gap-3 bg-emerald-500/5 px-6 py-3 rounded-2xl border border-emerald-500/10">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full sync-badge"></div>
+                <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Inventory Link: Active</span>
             </div>
         </header>
 
-        <div class="glass-panel p-8">
-            <div class="flex justify-between items-center mb-8">
-                <div class="flex gap-4">
-                    <div class="bg-emerald-500/10 px-4 py-2 rounded-xl border border-emerald-500/20">
-                        <p class="text-[8px] font-black text-emerald-500 uppercase">Total Items</p>
-                        <p id="total-items-count" class="text-lg font-black italic">0</p>
-                    </div>
-                    <div class="bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20">
-                        <p class="text-[8px] font-black text-blue-500 uppercase">Global Asset Value</p>
-                        <p id="total-asset-val" class="text-lg font-black italic">TZS 0.00</p>
-                    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-5 glass-card p-10">
+                <div class="flex items-center gap-3 mb-8">
+                    <i class="fas fa-plus-circle text-emerald-500"></i>
+                    <h4 class="font-black text-xs uppercase italic tracking-widest">New Acquisition Entry</h4>
                 </div>
-                <button onclick="window.location.href='purchases.html'" class="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-xl text-[10px] font-black uppercase transition-all shadow-lg shadow-emerald-500/20">
-                    <i class="fas fa-plus mr-2"></i> Add New Stock
-                </button>
+
+                <form id="purchase-form" class="space-y-6">
+                    <div>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 mb-2 block">Product Identity</label>
+                        <input type="text" id="p-name" class="input-node text-sm font-bold" placeholder="e.g. iPhone 15 Pro" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[9px] font-black text-slate-500 uppercase ml-2 mb-2 block">Buying Cost (Unit)</label>
+                            <input type="number" id="p-cost" oninput="calculateStats()" class="input-node text-sm font-bold" placeholder="0.00" required>
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black text-slate-500 uppercase ml-2 mb-2 block">Selling Price (Unit)</label>
+                            <input type="number" id="p-price" oninput="calculateStats()" class="input-node text-sm font-bold" placeholder="0.00" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 mb-2 block">Quantity Received</label>
+                        <input type="number" id="p-qty" oninput="calculateStats()" class="input-node text-sm font-bold" placeholder="Quantity" required>
+                    </div>
+
+                    <div class="bg-black/20 rounded-2xl p-6 space-y-3 border border-white/5">
+                        <div class="flex justify-between">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Total Investment</span>
+                            <span id="stat-total-investment" class="text-xs font-black text-white">TZS 0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Projected Profit Margin</span>
+                            <span id="stat-margin" class="text-[10px] font-black text-emerald-500">0%</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 py-5 rounded-2xl font-black text-xs uppercase transition-all shadow-xl shadow-emerald-600/10 group">
+                        Confirm & Sync to Inventory <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                    </button>
+                </form>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5">
-                            <th class="pb-6">Product Identity</th>
-                            <th class="pb-6">Current Stock</th>
-                            <th class="pb-6">Buying Price (Cost)</th>
-                            <th class="pb-6">Selling Price (Market)</th>
-                            <th class="pb-6">Expected Profit</th>
-                            <th class="pb-6 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventory-table-body" class="text-xs font-bold divide-y divide-white/5">
-                        </tbody>
-                </table>
+            <div class="lg:col-span-7 glass-card p-10">
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-history text-slate-500"></i>
+                        <h4 class="font-black text-xs uppercase italic tracking-widest text-slate-400">Recent Sync Logs</h4>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[9px] font-black text-slate-600 uppercase tracking-widest border-b border-white/5">
+                                <th class="pb-6">Date</th>
+                                <th class="pb-6">Product</th>
+                                <th class="pb-6">Qty</th>
+                                <th class="pb-6">Total Cost</th>
+                                <th class="pb-6">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchase-log" class="text-xs font-bold divide-y divide-white/5">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
-
-    <div id="edit-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100] backdrop-blur-sm">
-        <div class="glass-panel p-8 w-[400px]">
-            <h4 class="font-black text-xs uppercase text-emerald-500 mb-6 italic">Modify Stock Data</h4>
-            <div class="space-y-4">
-                <input type="hidden" id="edit-id">
-                <div class="flex flex-col gap-2">
-                    <label class="text-[9px] font-black text-slate-500 uppercase">Product Name</label>
-                    <input type="text" id="edit-name" class="search-bar text-xs font-bold" readonly>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col gap-2">
-                        <label class="text-[9px] font-black text-slate-500 uppercase">Stock Qty</label>
-                        <input type="number" id="edit-qty" class="search-bar text-xs font-bold">
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label class="text-[9px] font-black text-slate-500 uppercase">Sale Price</label>
-                        <input type="number" id="edit-price" class="search-bar text-xs font-bold">
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button onclick="closeModal()" class="flex-1 bg-slate-800 py-3 rounded-xl text-[10px] font-black uppercase">Cancel</button>
-                    <button onclick="saveEdit()" class="flex-1 bg-emerald-600 py-3 rounded-xl text-[10px] font-black uppercase">Sync Changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         const SUPABASE_URL = "https://lhviiczzlctaocngofbq.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let currentUser = null;
-        let allInventory = [];
+        let userEmail = "";
 
-        async function init() {
+        async function startup() {
             const { data: { user } } = await _supabase.auth.getUser();
             if(!user) { window.location.href = "login_retail.html"; return; }
-            currentUser = user;
-            fetchInventory();
+            userEmail = user.email;
+            loadLogs();
         }
 
-        async function fetchInventory() {
-            const { data: items, error } = await _supabase
-                .from('inventory')
-                .select('*')
-                .eq('owner_email', currentUser.email)
-                .order('name', { ascending: true });
+        // MAUJANJA: Piga hesabu wakati anajaza
+        function calculateStats() {
+            const cost = parseFloat(document.getElementById('p-cost').value) || 0;
+            const price = parseFloat(document.getElementById('p-price').value) || 0;
+            const qty = parseInt(document.getElementById('p-qty').value) || 0;
 
-            if (items) {
-                allInventory = items;
-                renderTable(items);
+            const total = cost * qty;
+            document.getElementById('stat-total-investment').innerText = `TZS ${total.toLocaleString()}`;
+
+            if(cost > 0) {
+                const margin = ((price - cost) / cost) * 100;
+                document.getElementById('stat-margin').innerText = `${margin.toFixed(1)}% Profit`;
             }
         }
 
-        function renderTable(data) {
-            const tableBody = document.getElementById('inventory-table-body');
-            tableBody.innerHTML = '';
-            
-            let totalVal = 0;
-            data.forEach(item => {
-                const stockVal = item.price * item.quantity;
-                totalVal += stockVal;
-                const profitPerUnit = item.price - (item.cost_price || 0);
-                const stockStatus = item.quantity <= 0 ? 'text-red-500' : (item.quantity < 10 ? 'text-orange-500' : 'text-emerald-500');
+        document.getElementById('purchase-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Synchronizing Nodes...`;
+            btn.disabled = true;
 
-                tableBody.innerHTML += `
-                    <tr class="hover:bg-white/5 transition border-b border-white/5">
-                        <td class="py-6 uppercase tracking-tighter font-black">${item.name}</td>
-                        <td class="py-6 ${stockStatus}">${item.quantity} units</td>
-                        <td class="py-6 text-slate-400">TZS ${(item.cost_price || 0).toLocaleString()}</td>
-                        <td class="py-6 text-emerald-400">TZS ${item.price.toLocaleString()}</td>
-                        <td class="py-6 text-blue-400">TZS ${(profitPerUnit * item.quantity).toLocaleString()}</td>
-                        <td class="py-6 flex justify-center gap-4">
-                            <i onclick='openEditModal(${JSON.stringify(item)})' class="fas fa-edit text-blue-500 action-btn" title="Edit"></i>
-                            <i onclick='deleteProduct("${item.id}")' class="fas fa-trash text-red-500 action-btn" title="Delete"></i>
-                        </td>
+            const name = document.getElementById('p-name').value;
+            const cost = parseFloat(document.getElementById('p-cost').value);
+            const price = parseFloat(document.getElementById('p-price').value);
+            const qty = parseInt(document.getElementById('p-qty').value);
+
+            try {
+                // STEP 1: Tafuta kama bidhaa ipo Inventory
+                const { data: existing } = await _supabase
+                    .from('inventory')
+                    .select('*')
+                    .eq('name', name)
+                    .eq('owner_email', userEmail)
+                    .single();
+
+                if(existing) {
+                    // Update Quantity & Price
+                    await _supabase.from('inventory').update({
+                        quantity: existing.quantity + qty,
+                        price: price,
+                        cost_price: cost
+                    }).eq('id', existing.id);
+                } else {
+                    // Insert New Product
+                    await _supabase.from('inventory').insert([{
+                        name, quantity: qty, price, cost_price: cost, owner_email: userEmail
+                    }]);
+                }
+
+                // STEP 2: Tunza log ya Purchase
+                await _supabase.from('purchases').insert([{
+                    product_name: name,
+                    quantity: qty,
+                    cost_price: cost,
+                    total_cost: cost * qty,
+                    owner_email: userEmail
+                }]);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sync Success',
+                    text: 'Inventory updated across all nodes!',
+                    background: '#0f172a',
+                    color: '#fff',
+                    confirmButtonColor: '#10b981'
+                });
+
+                e.target.reset();
+                calculateStats();
+                loadLogs();
+
+            } catch (err) {
+                console.error(err);
+                alert("Critical Sync Error!");
+            } finally {
+                btn.innerHTML = `Confirm & Sync to Inventory <i class="fas fa-arrow-right ml-2"></i>`;
+                btn.disabled = false;
+            }
+        });
+
+        async function loadLogs() {
+            const { data: logs } = await _supabase
+                .from('purchases')
+                .select('*')
+                .eq('owner_email', userEmail)
+                .order('created_at', { ascending: false })
+                .limit(8);
+
+            const tbody = document.getElementById('purchase-log');
+            tbody.innerHTML = '';
+
+            logs?.forEach(log => {
+                const date = new Date(log.created_at).toLocaleDateString('en-GB');
+                tbody.innerHTML += `
+                    <tr class="hover:bg-white/5 transition group">
+                        <td class="py-5 text-slate-500 text-[10px]">${date}</td>
+                        <td class="py-5 uppercase tracking-tighter">${log.product_name}</td>
+                        <td class="py-5 text-emerald-500">+${log.quantity}</td>
+                        <td class="py-5">TZS ${log.total_cost.toLocaleString()}</td>
+                        <td class="py-5"><i class="fas fa-check-circle text-emerald-500/30 group-hover:text-emerald-500 transition"></i></td>
                     </tr>
                 `;
             });
-
-            document.getElementById('total-items-count').innerText = data.length;
-            document.getElementById('total-asset-val').innerText = `TZS ${totalVal.toLocaleString()}`;
         }
 
-        function searchInventory() {
-            const term = document.getElementById('inventory-search').value.toLowerCase();
-            const filtered = allInventory.filter(item => item.name.toLowerCase().includes(term));
-            renderTable(filtered);
-        }
-
-        function openEditModal(item) {
-            document.getElementById('edit-id').value = item.id;
-            document.getElementById('edit-name').value = item.name;
-            document.getElementById('edit-qty').value = item.quantity;
-            document.getElementById('edit-price').value = item.price;
-            document.getElementById('edit-modal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('edit-modal').classList.add('hidden');
-        }
-
-        async function saveEdit() {
-            const id = document.getElementById('edit-id').value;
-            const qty = parseInt(document.getElementById('edit-qty').value);
-            const price = parseFloat(document.getElementById('edit-price').value);
-
-            const { error } = await _supabase.from('inventory')
-                .update({ quantity: qty, price: price })
-                .eq('id', id);
-
-            if (!error) {
-                closeModal();
-                fetchInventory();
-            } else {
-                alert("Update failed!");
-            }
-        }
-
-        async function deleteProduct(id) {
-            if (confirm("Are you sure? This will permanently remove this product from your inventory.")) {
-                const { error } = await _supabase.from('inventory').delete().eq('id', id);
-                if (!error) fetchInventory();
-            }
-        }
-
-        init();
+        startup();
     </script>
 </body>
 </html>
