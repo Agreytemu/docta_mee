@@ -3,94 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Inventory | Docta Mee</title>
+    <title>Inventory Hub | Docta Mee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #010409; color: #e6edf3; }
-        .sidebar { background: #0d1117; border-right: 1px solid #30363d; }
-        .glass-panel { background: #0d1117; border: 1px solid #30363d; border-radius: 1.5rem; }
-        .nav-link { transition: 0.3s; border-radius: 0.75rem; color: #8b949e; }
-        .nav-link.active { background: #238636; color: white; }
-        .search-node { background: #161b22; border: 1px solid #30363d; border-radius: 0.75rem; padding: 0.75rem 1.25rem; color: white; outline: none; }
-        .search-node:focus { border-color: #238636; }
-        .deleted-row { opacity: 0.6; filter: grayscale(1); background: rgba(248, 81, 73, 0.05) !important; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: #f8fafc; }
+        .glass-panel { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; }
+        .sidebar { background: #0b1222; border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { transition: 0.3s; border-radius: 1rem; color: #94a3b8; }
+        .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .deleted-row { opacity: 0.4; filter: grayscale(1); background: rgba(239, 68, 68, 0.02) !important; }
     </style>
 </head>
 <body class="min-h-screen flex">
 
     <aside class="sidebar w-72 fixed h-full flex flex-col p-6 z-50">
         <div class="mb-10 flex items-center gap-3">
-            <div class="w-10 h-10 bg-[#238636] rounded-lg flex items-center justify-center shadow-lg">
-                <i class="fas fa-warehouse text-white"></i>
+            <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <i class="fas fa-boxes-stacked text-white"></i>
             </div>
-            <h1 class="text-xl font-extrabold italic tracking-tighter uppercase">docta.mee</h1>
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">docta.mee</h1>
         </div>
-        <nav class="flex-1 space-y-1">
-            <a href="dashboard.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-chart-line"></i> OVERVIEW</a>
-            <a href="inventory.html" class="nav-link active flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-boxes-stacked"></i> INVENTORY HUB</a>
-            <a href="purchases.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-truck-loading"></i> PURCHASES</a>
-            <a href="sales.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-cash-register"></i> SALES TERMINAL</a>
+        <nav class="flex-1 space-y-2">
+            <a href="dashboard.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-th-large w-5"></i> DASHBOARD</a>
+            <a href="inventory.html" class="nav-link active flex items-center gap-4 p-4 font-black text-xs"><i class="fas fa-cubes w-5"></i> INVENTORY HUB</a>
+            <a href="purchases.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-cart-plus w-5"></i> PURCHASES</a>
+            <a href="sales.html" class="nav-link flex items-center gap-4 p-4 font-bold text-xs"><i class="fas fa-cash-register w-5"></i> SALES</a>
         </nav>
     </aside>
 
-    <main class="flex-1 ml-72 p-8">
-        <header class="flex justify-between items-center mb-10">
+    <main class="flex-1 ml-72 p-10">
+        <header class="flex justify-between items-end mb-12">
             <div>
-                <h2 class="text-3xl font-black tracking-tighter uppercase">Inventory Control</h2>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Advanced Stock Sync & Audit Terminal</p>
+                <h2 class="text-4xl font-black tracking-tighter uppercase italic">Master Inventory</h2>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mt-2">Real-time Stock Auditing Terminal</p>
             </div>
-            <div class="w-1/3">
-                <input type="text" id="inventory-search" onkeyup="filterItems()" class="search-node w-full text-xs" placeholder="Search product name or SKU...">
-            </div>
+            <button onclick="syncNow()" class="bg-emerald-600 hover:bg-emerald-500 px-8 py-3 rounded-2xl text-[10px] font-black uppercase transition-all shadow-xl shadow-emerald-500/20">
+                <i class="fas fa-sync-alt mr-2"></i> Refresh Stock
+            </button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="glass-panel p-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <div class="glass-panel p-6 border-l-4 border-emerald-500">
                 <p class="text-[9px] font-black text-slate-500 uppercase">Total Asset Value</p>
-                <h3 id="stat-total-val" class="text-xl font-black mt-2">TZS 0</h3>
+                <h3 id="total-asset" class="text-2xl font-black mt-1">TZS 0</h3>
             </div>
-            <div class="glass-panel p-6">
-                <p class="text-[9px] font-black text-slate-500 uppercase">Total Stock Items</p>
-                <h3 id="stat-stock-count" class="text-xl font-black mt-2">0</h3>
+            <div class="glass-panel p-6 border-l-4 border-blue-500">
+                <p class="text-[9px] font-black text-slate-500 uppercase">Unique SKUs</p>
+                <h3 id="total-items" class="text-2xl font-black mt-1">0</h3>
             </div>
-            <div class="glass-panel p-6 border-b-2 border-orange-500">
-                <p class="text-[9px] font-black text-slate-500 uppercase">Low Stock Alerts</p>
-                <h3 id="stat-low-stock" class="text-xl font-black mt-2 text-orange-500">0</h3>
-            </div>
-            <div class="glass-panel p-6 border-b-2 border-red-500">
+            <div class="glass-panel p-6 border-l-4 border-red-500">
                 <p class="text-[9px] font-black text-slate-500 uppercase">Deleted Records</p>
-                <h3 id="stat-deleted" class="text-xl font-black mt-2 text-red-500">0</h3>
+                <h3 id="deleted-count" class="text-2xl font-black mt-1">0</h3>
             </div>
         </div>
 
         <div class="glass-panel overflow-hidden">
-            <div class="p-6 border-b border-[#30363d] flex justify-between items-center">
-                <h4 class="text-xs font-black uppercase text-emerald-500">Master Registry</h4>
-                <div class="flex gap-3">
-                    <button onclick="fetchInventory()" class="text-[10px] font-bold bg-[#30363d] px-4 py-2 rounded-lg hover:bg-[#484f58] transition">Refresh Sync</button>
-                </div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-[10px] font-black text-slate-500 uppercase border-b border-[#30363d]">
-                            <th class="p-6">Product & Date Added</th>
-                            <th class="p-6">Quantity</th>
-                            <th class="p-6">Unit Cost</th>
-                            <th class="p-6">Selling Price</th>
-                            <th class="p-6">Expected Profit</th>
-                            <th class="p-6 text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventory-body" class="text-sm">
-                        </tbody>
-                </table>
-            </div>
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5 bg-white/[0.02]">
+                        <th class="p-8">Product / Date Added</th>
+                        <th class="p-8 text-center">In Stock</th>
+                        <th class="p-8">Cost Price</th>
+                        <th class="p-8">Market Price</th>
+                        <th class="p-8 text-center">Control</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-list" class="text-sm font-bold divide-y divide-white/5">
+                    </tbody>
+            </table>
         </div>
     </main>
 
@@ -99,126 +83,86 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let userEmail = "";
-        let masterData = [];
+        let currentUser = "";
 
-        async function init() {
+        async function startup() {
             const { data: { user } } = await _supabase.auth.getUser();
             if(!user) { window.location.href = "login_retail.html"; return; }
-            userEmail = user.email;
-            fetchInventory();
+            currentUser = user.email;
+            syncNow();
         }
 
-        async function fetchInventory() {
-            // Nimeongeza uwezo wa kusoma bidhaa zote ikiwemo zilizofutwa (soft delete)
+        async function syncNow() {
             const { data, error } = await _supabase
                 .from('inventory')
                 .select('*')
-                .eq('owner_email', userEmail)
+                .eq('owner_email', currentUser)
                 .order('created_at', { ascending: false });
 
-            if (data) {
-                masterData = data;
-                renderTable(data);
-            }
+            if(error) { console.error(error); return; }
+            renderTable(data);
         }
 
         function renderTable(items) {
-            const tbody = document.getElementById('inventory-body');
-            tbody.innerHTML = '';
-            
-            let totalVal = 0;
-            let lowStock = 0;
-            let deletedCount = 0;
+            const list = document.getElementById('inventory-list');
+            list.innerHTML = '';
+            let assetTotal = 0;
+            let delCount = 0;
 
             items.forEach(item => {
                 const isDeleted = item.status === 'deleted';
-                if(isDeleted) deletedCount++;
-                
-                const profit = (item.price - item.cost_price) * item.quantity;
-                if(!isDeleted) totalVal += (item.price * item.quantity);
-                if(item.quantity < 5 && !isDeleted) lowStock++;
+                if(isDeleted) delCount++;
+                else assetTotal += (item.price * item.quantity);
 
-                const dateAdded = new Date(item.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric'});
+                const date = new Date(item.created_at).toLocaleDateString('en-GB');
 
-                tbody.innerHTML += `
-                    <tr class="${isDeleted ? 'deleted-row' : ''} border-b border-[#30363d] hover:bg-[#161b22] transition">
-                        <td class="p-6">
-                            <div class="font-bold uppercase tracking-tighter">${item.name}</div>
-                            <div class="text-[9px] text-slate-500 font-bold">ADDED: ${dateAdded}</div>
-                            ${isDeleted ? `<div class="text-[10px] text-red-500 font-black mt-1">REASON: ${item.delete_reason}</div>` : ''}
+                list.innerHTML += `
+                    <tr class="${isDeleted ? 'deleted-row' : ''}">
+                        <td class="p-8">
+                            <div class="uppercase font-black text-white">${item.name}</div>
+                            <div class="text-[9px] text-slate-500 font-bold uppercase">Added: ${date}</div>
+                            ${isDeleted ? `<div class="text-[9px] text-red-500 mt-1 uppercase">Reason: ${item.delete_reason}</div>` : ''}
                         </td>
-                        <td class="p-6 font-mono ${item.quantity < 5 && !isDeleted ? 'text-orange-500' : ''}">${item.quantity} units</td>
-                        <td class="p-6 text-slate-400">TZS ${item.cost_price.toLocaleString()}</td>
-                        <td class="p-6 text-emerald-500 font-bold">TZS ${item.price.toLocaleString()}</td>
-                        <td class="p-6 text-blue-400">TZS ${profit.toLocaleString()}</td>
-                        <td class="p-6 text-center">
+                        <td class="p-8 text-center">
+                            <span class="text-lg font-black ${item.quantity < 5 && !isDeleted ? 'text-orange-500' : 'text-emerald-400'}">
+                                ${item.quantity}
+                            </span>
+                        </td>
+                        <td class="p-8 text-slate-400">TZS ${item.cost_price.toLocaleString()}</td>
+                        <td class="p-8 text-white font-black">TZS ${item.price.toLocaleString()}</td>
+                        <td class="p-8 text-center">
                             ${!isDeleted ? `
-                                <button onclick="handleDelete('${item.id}', '${item.name}')" class="text-red-500 hover:scale-110 transition">
+                                <button onclick="archiveItem('${item.id}', '${item.name}')" class="text-red-500 hover:text-red-300">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
-                            ` : '<i class="fas fa-ban text-slate-600"></i>'}
+                            ` : '<i class="fas fa-ban text-slate-700"></i>'}
                         </td>
                     </tr>
                 `;
             });
 
-            document.getElementById('stat-total-val').innerText = `TZS ${totalVal.toLocaleString()}`;
-            document.getElementById('stat-stock-count').innerText = items.filter(i => i.status !== 'deleted').length;
-            document.getElementById('stat-low-stock').innerText = lowStock;
-            document.getElementById('stat-deleted').innerText = deletedCount;
+            document.getElementById('total-asset').innerText = `TZS ${assetTotal.toLocaleString()}`;
+            document.getElementById('total-items').innerText = items.filter(i => i.status !== 'deleted').length;
+            document.getElementById('deleted-count').innerText = delCount;
         }
 
-        async function handleDelete(id, name) {
+        async function archiveItem(id, name) {
             const { value: reason } = await Swal.fire({
-                title: `Futa Bidhaa: ${name}`,
+                title: `Delete ${name}?`,
                 input: 'select',
-                inputOptions: {
-                    'damage': 'Mzigo Umeharibika',
-                    'expired': 'Umeisha Muda (Expired)',
-                    'error': 'Makosa ya Kurekodi',
-                    'sold_out': 'Imeshaisha Stoo',
-                    'other': 'Sababu Nyingine'
-                },
-                inputPlaceholder: 'Chagua sababu ya kufuta...',
+                inputOptions: { 'damaged': 'Damaged', 'expired': 'Expired', 'error': 'Entry Error' },
+                inputPlaceholder: 'Select reason',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Confirm Deletion',
-                background: '#0d1117',
-                color: '#fff'
+                background: '#0f172a', color: '#fff'
             });
 
-            if (reason) {
-                // Maujanja: Hatufuti mazima, tunabadilisha "status" na kuandika sababu
-                const { error } = await _supabase
-                    .from('inventory')
-                    .update({ 
-                        status: 'deleted', 
-                        delete_reason: reason,
-                        quantity: 0 
-                    })
-                    .eq('id', id);
-
-                if(!error) {
-                    Swal.fire({
-                        title: 'Done!',
-                        text: 'Bidhaa imetolewa stoo lakini rekodi inabaki kwa Boss.',
-                        icon: 'success',
-                        background: '#0d1117',
-                        color: '#fff'
-                    });
-                    fetchInventory();
-                }
+            if(reason) {
+                await _supabase.from('inventory').update({ status: 'deleted', delete_reason: reason, quantity: 0 }).eq('id', id);
+                syncNow();
             }
         }
 
-        function filterItems() {
-            const query = document.getElementById('inventory-search').value.toLowerCase();
-            const filtered = masterData.filter(i => i.name.toLowerCase().includes(query));
-            renderTable(filtered);
-        }
-
-        init();
+        startup();
     </script>
 </body>
 </html>
