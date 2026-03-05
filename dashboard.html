@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Dashboard | Docta Mee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        .sidebar { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border-right: 1px solid rgba(255,255,255,0.05); }
+        .stat-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s ease; }
+        .stat-card:hover { transform: translateY(-5px); border-color: #10b981; }
+        .glass-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body class="min-h-screen flex">
+
+    <aside class="sidebar w-64 hidden lg:flex flex-col fixed h-full z-50">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i class="fas fa-cube text-white text-sm"></i>
+                </div>
+                <h1 class="text-lg font-black italic tracking-tighter">docta.mee</h1>
+            </div>
+
+            <nav class="space-y-6">
+                <a href="#" class="flex items-center gap-4 text-emerald-400 font-bold text-sm bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
+                    <i class="fas fa-chart-pie w-5"></i> Overview
+                </a>
+                <a href="#" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-sm p-3 transition">
+                    <i class="fas fa-boxes-stacked w-5"></i> Inventory Management
+                </a>
+                <a href="#" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-sm p-3 transition">
+                    <i class="fas fa-cash-register w-5"></i> POS System
+                </a>
+                <a href="#" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-sm p-3 transition">
+                    <i class="fas fa-users w-5"></i> Staff Control
+                </a>
+                <a href="#" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-sm p-3 transition">
+                    <i class="fas fa-file-invoice-dollar w-5"></i> Financial Reports
+                </a>
+            </nav>
+        </div>
+
+        <div class="mt-auto p-8">
+            <button onclick="handleLogout()" class="w-full bg-red-500/10 text-red-500 p-4 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-red-500/20 hover:bg-red-500 hover:text-white transition">
+                Terminate Session
+            </button>
+        </div>
+    </aside>
+
+    <main class="lg:ml-64 flex-1 flex flex-col">
+        
+        <header class="glass-nav sticky top-0 p-6 flex justify-between items-center z-40">
+            <div>
+                <h2 id="business-name" class="text-xl font-black text-white uppercase tracking-tight italic">Loading Infrastructure...</h2>
+                <p id="business-category" class="text-[9px] text-emerald-500 font-bold uppercase tracking-[0.3em]">Authenticating Secure Link</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <p id="user-email" class="text-xs font-bold text-slate-300">admin@doctamee.cloud</p>
+                    <span class="text-[8px] bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded font-black uppercase">Active Node</span>
+                </div>
+                <div class="w-12 h-12 bg-slate-800 rounded-full border-2 border-emerald-500/50 flex items-center justify-center">
+                    <i class="fas fa-user-shield text-slate-300"></i>
+                </div>
+            </div>
+        </header>
+
+        <section class="p-8 space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="stat-card p-6 rounded-[2rem]">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-500"><i class="fas fa-dollar-sign"></i></div>
+                        <span class="text-emerald-500 text-[10px] font-black">+12.5%</span>
+                    </div>
+                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Gross Revenue</p>
+                    <h3 class="text-2xl font-black mt-1 tracking-tighter">TZS 4.2M</h3>
+                </div>
+
+                <div class="stat-card p-6 rounded-[2rem]">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-blue-500/10 rounded-xl text-blue-500"><i class="fas fa-shopping-basket"></i></div>
+                        <span class="text-blue-500 text-[10px] font-black">Stable</span>
+                    </div>
+                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Total Sales</p>
+                    <h3 class="text-2xl font-black mt-1 tracking-tighter">1,240</h3>
+                </div>
+
+                <div class="stat-card p-6 rounded-[2rem]">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-purple-500/10 rounded-xl text-purple-500"><i class="fas fa-boxes-stacked"></i></div>
+                        <span class="text-red-500 text-[10px] font-black">-3 Low</span>
+                    </div>
+                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Stock Level</p>
+                    <h3 class="text-2xl font-black mt-1 tracking-tighter">84%</h3>
+                </div>
+
+                <div class="stat-card p-6 rounded-[2rem]">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-orange-500/10 rounded-xl text-orange-500"><i class="fas fa-bolt"></i></div>
+                        <span class="text-emerald-500 text-[10px] font-black">Live</span>
+                    </div>
+                    <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">System Health</p>
+                    <h3 class="text-2xl font-black mt-1 tracking-tighter">99.9%</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 stat-card p-8 rounded-[3rem]">
+                    <div class="flex justify-between items-center mb-8">
+                        <h4 class="font-black text-sm uppercase tracking-widest italic text-emerald-500">Sales Intelligence</h4>
+                        <select class="bg-slate-800 border-none rounded-lg text-[10px] font-bold p-2 outline-none">
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                        </select>
+                    </div>
+                    <canvas id="salesChart" height="150"></canvas>
+                </div>
+
+                <div class="stat-card p-8 rounded-[3rem] flex flex-col">
+                    <h4 class="font-black text-sm uppercase tracking-widest italic text-emerald-400 mb-6">Inventory Alerts</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 bg-slate-900/50 p-4 rounded-2xl border-l-4 border-red-500">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                            <div>
+                                <p class="text-[10px] font-black text-white uppercase">Panadol Advance</p>
+                                <p class="text-[8px] text-slate-400">Stock below critical limit (5 units left)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 bg-slate-900/50 p-4 rounded-2xl border-l-4 border-orange-500">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            <div>
+                                <p class="text-[10px] font-black text-white uppercase">Baby Diapers L</p>
+                                <p class="text-[8px] text-slate-400">Expiring in 14 days</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mt-auto w-full py-4 text-[10px] font-black uppercase text-emerald-500 border border-emerald-500/20 rounded-2xl hover:bg-emerald-500 hover:text-white transition">Full Inventory View</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const SUPABASE_URL = "https://lhviiczzlctaocngofbq.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 1. CHECK SESSION & FETCH BUSINESS DATA
+        async function checkAuth() {
+            const { data: { user } } = await _supabase.auth.getUser();
+
+            if (!user) {
+                window.location.href = "login_retail.html";
+                return;
+            }
+
+            document.getElementById('user-email').innerText = user.email;
+
+            // Fetch business data from retail_registrations table
+            const { data, error } = await _supabase
+                .from('retail_registrations')
+                .select('*')
+                .eq('email', user.email)
+                .single();
+
+            if (data) {
+                document.getElementById('business-name').innerText = data.business_name;
+                document.getElementById('business-category').innerText = data.category + " Management Node";
+            }
+        }
+
+        // 2. LOGOUT FUNCTION
+        async function handleLogout() {
+            await _supabase.auth.signOut();
+            window.location.href = "login_retail.html";
+        }
+
+        // 3. CHART INITIALIZATION
+        function initChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Sales Revenue',
+                        data: [420, 580, 490, 820, 950, 1100, 900],
+                        borderColor: '#10b981',
+                        borderWidth: 4,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)'
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        window.onload = () => {
+            checkAuth();
+            initChart();
+        };
+    </script>
+</body>
+</html>
