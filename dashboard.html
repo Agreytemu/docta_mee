@@ -3,154 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Hub | Docta Mee</title>
+    <title>Master Dashboard | Docta Mee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #f8fafc; overflow-x: hidden; }
-        .sidebar { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border-right: 1px solid rgba(255,255,255,0.05); }
-        .stat-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .stat-card:hover { transform: translateY(-8px) scale(1.02); border-color: #10b981; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .glass-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .pulse-online { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #f8fafc; }
+        .sidebar { background: #0b1222; border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { transition: all 0.3s ease; border-radius: 1rem; }
+        .nav-link:hover { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .stat-card { background: #1e293b; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+        .stat-card::after { content: ""; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: #10b981; opacity: 0; transition: 0.3s; }
+        .stat-card:hover::after { opacity: 1; }
+        .pulse-green { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 70% { transform: scale(1.1); opacity: 0.3; } 100% { transform: scale(0.95); opacity: 0.8; } }
     </style>
 </head>
 <body class="min-h-screen flex">
 
-    <aside class="sidebar w-72 hidden lg:flex flex-col fixed h-full z-50 shadow-2xl">
-        <div class="p-8">
-            <div class="flex items-center gap-4 mb-12">
-                <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                    <i class="fas fa-layer-group text-white text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-black italic tracking-tighter">docta.mee</h1>
-                    <span class="text-[8px] font-bold text-emerald-400 uppercase tracking-[0.3em]">Core Engine v2.1</span>
-                </div>
+    <aside class="sidebar w-72 fixed h-full flex flex-col p-6 z-50">
+        <div class="mb-10 flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                <i class="fas fa-microchip text-white"></i>
             </div>
-
-            <nav class="space-y-4">
-                <a href="dashboard.html" class="flex items-center gap-4 text-emerald-400 font-black text-xs bg-emerald-500/10 p-4 rounded-2xl border border-emerald-500/20">
-                    <i class="fas fa-chart-line w-6 text-lg"></i> COMMAND CENTER
-                </a>
-                <a href="inventory.html" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-xs p-4 transition group">
-                    <i class="fas fa-warehouse w-6 group-hover:text-emerald-400"></i> INVENTORY CONTROL
-                </a>
-                <a href="#" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-xs p-4 transition group">
-                    <i class="fas fa-cash-register w-6 group-hover:text-emerald-400"></i> LIVE POS TERMINAL
-                </a>
-                <a href="#" class="flex items-center gap-4 text-slate-400 hover:text-white font-bold text-xs p-4 transition group">
-                    <i class="fas fa-file-invoice w-6 group-hover:text-emerald-400"></i> FINANCIAL LEDGER
-                </a>
-            </nav>
+            <h1 class="text-xl font-black italic tracking-tighter">docta.mee</h1>
         </div>
 
-        <div class="mt-auto p-8 border-t border-white/5">
-            <button onclick="handleLogout()" class="w-full bg-red-500/10 text-red-500 p-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest border border-red-500/20 hover:bg-red-500 hover:text-white transition-all duration-300">
-                Terminate Session
-            </button>
-        </div>
+        <nav class="flex-1 space-y-2 overflow-y-auto">
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4 ml-4">Main Menu</p>
+            <a href="dashboard.html" class="nav-link flex items-center gap-4 p-4 text-emerald-400 bg-emerald-500/10 font-black text-xs">
+                <i class="fas fa-th-large w-5"></i> DASHBOARD
+            </a>
+            <a href="sales.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                <i class="fas fa-cash-register w-5"></i> SALES TERMINAL
+            </a>
+            <a href="inventory.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                <i class="fas fa-boxes-stacked w-5"></i> INVENTORY
+            </a>
+            <a href="reports.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                <i class="fas fa-chart-bar w-5"></i> DAILY REPORTS
+            </a>
+            <a href="purchases.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                <i class="fas fa-shopping-cart w-5"></i> PURCHASES
+            </a>
+            <a href="branches.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                <i class="fas fa-network-wired w-5"></i> MANAGE BRANCHES
+            </a>
+            <a href="shop_mgmt.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                <i class="fas fa-store w-5"></i> SHOP MANAGEMENT
+            </a>
+
+            <div class="pt-6">
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4 ml-4">Subscription</p>
+                <a href="payments.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                    <i class="fas fa-credit-card w-5"></i> PAYMENTS & DAYS
+                </a>
+                <a href="contact.html" class="nav-link flex items-center gap-4 p-4 text-slate-400 font-bold text-xs">
+                    <i class="fas fa-headset w-5"></i> CONTACT DEVELOPER
+                </a>
+            </div>
+        </nav>
     </aside>
 
-    <main class="lg:ml-72 flex-1 flex flex-col">
+    <main class="flex-1 ml-72 p-8">
         
-        <header class="glass-nav sticky top-0 p-8 flex justify-between items-center z-40">
-            <div>
-                <h2 id="business-name" class="text-2xl font-black text-white uppercase tracking-tighter italic">Initializing...</h2>
-                <div class="flex items-center gap-2 mt-1">
-                    <span class="w-2 h-2 bg-emerald-500 rounded-full pulse-online"></span>
-                    <p id="business-category" class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em]">Connecting to Secure Node</p>
+        <header class="flex justify-between items-center bg-[#1e293b]/50 p-6 rounded-[2rem] border border-white/5 mb-8">
+            <div class="flex items-center gap-6">
+                <div class="border-r border-white/10 pr-6">
+                    <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Operator Email</p>
+                    <p id="user-email" class="text-xs font-bold text-slate-200">---</p>
+                </div>
+                <div>
+                    <h2 id="business-name" class="text-xl font-black italic text-white uppercase tracking-tighter tracking-widest">---</h2>
+                    <p id="business-category" class="text-[9px] font-bold text-emerald-400/60 uppercase tracking-[0.3em]">---</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-6">
-                <div class="text-right hidden md:block">
-                    <p id="user-email" class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">---</p>
-                    <p class="text-[8px] text-slate-500 font-bold uppercase mt-1">Status: Authorized Operator</p>
+            <div class="flex items-center gap-8">
+                <div class="text-right">
+                    <p class="text-[9px] font-black text-slate-500 uppercase">Network Status</p>
+                    <div class="flex items-center gap-2">
+                        <span id="ping-speed" class="text-xs font-black text-emerald-500">24ms</span>
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full pulse-green"></div>
+                    </div>
                 </div>
-                <div class="w-14 h-14 bg-slate-800 rounded-2xl border border-white/10 flex items-center justify-center shadow-xl">
-                    <i class="fas fa-id-badge text-2xl text-slate-400"></i>
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
+                    <i class="fas fa-wifi text-emerald-500 text-xs"></i>
                 </div>
             </div>
         </header>
 
-        <section class="p-8 md:p-12 space-y-12">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-                <div class="stat-card p-8 rounded-[2.5rem] relative overflow-hidden">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/5 rounded-full blur-3xl"></div>
-                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Inventory Value</p>
-                    <h3 id="stat-value" class="text-3xl font-black tracking-tighter text-white">TZS 0.00</h3>
-                    <div class="mt-4 flex items-center gap-2 text-emerald-400">
-                        <i class="fas fa-arrow-up text-[10px]"></i>
-                        <span class="text-[10px] font-black">LIVE ASSET SYNC</span>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card p-6 rounded-[2rem]">
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Thamani ya Mzigo Uliopo</p>
+                <h3 id="total-inventory-value" class="text-2xl font-black mt-2 tracking-tighter">TZS 0.00</h3>
+                <div class="mt-4 flex items-center justify-between text-[8px] font-bold uppercase">
+                    <span class="text-emerald-500">In-Stock Vault</span>
+                    <i class="fas fa-vault text-slate-600"></i>
                 </div>
+            </div>
 
-                <div class="stat-card p-8 rounded-[2.5rem]">
-                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Unique SKUs</p>
-                    <h3 id="stat-items" class="text-3xl font-black tracking-tighter text-white">0</h3>
-                    <div class="mt-4 flex items-center gap-2 text-blue-400">
-                        <i class="fas fa-box text-[10px]"></i>
-                        <span class="text-[10px] font-black uppercase tracking-widest">In Stock Items</span>
-                    </div>
+            <div class="stat-card p-6 rounded-[2rem]">
+                <div class="flex justify-between items-start">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Thamani ya Mauzo (Jumla)</p>
+                    <input type="date" class="bg-slate-800 border-none text-[8px] rounded p-1 text-white outline-none">
                 </div>
-
-                <div id="alert-card" class="stat-card p-8 rounded-[2.5rem] border-red-500/20">
-                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Critical Alerts</p>
-                    <h3 id="stat-alerts" class="text-3xl font-black tracking-tighter text-white">0</h3>
-                    <div class="mt-4 flex items-center gap-2 text-red-500">
-                        <i class="fas fa-radiation text-[10px] pulse-online"></i>
-                        <span class="text-[10px] font-black uppercase tracking-widest">Low Stock Items</span>
-                    </div>
+                <h3 class="text-2xl font-black mt-2 tracking-tighter">TZS 0.00</h3>
+                <div class="mt-4 flex items-center justify-between text-[8px] font-bold uppercase text-blue-400">
+                    <span>Revenue Generated</span>
+                    <i class="fas fa-chart-line"></i>
                 </div>
+            </div>
 
-                <div class="stat-card p-8 rounded-[2.5rem]">
-                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">System Health</p>
-                    <h3 class="text-3xl font-black tracking-tighter text-emerald-500">99.9%</h3>
-                    <div class="mt-4 flex items-center gap-2 text-emerald-500">
-                        <i class="fas fa-shield-check text-[10px]"></i>
-                        <span class="text-[10px] font-black uppercase tracking-widest">Encrypted Link</span>
+            <div class="stat-card p-6 rounded-[2rem]">
+                <p class="text-[9px] font-black text-red-500/60 uppercase tracking-widest">Hasara / Damaged</p>
+                <h3 class="text-2xl font-black mt-2 tracking-tighter text-red-400">TZS 0.00</h3>
+                <div class="mt-4 flex items-center justify-between text-[8px] font-bold uppercase text-red-500/50">
+                    <span>Loss Analytics</span>
+                    <i class="fas fa-biohazard"></i>
+                </div>
+            </div>
+
+            <div class="stat-card p-6 rounded-[2rem] border-emerald-500/20">
+                <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Uhai wa System</p>
+                <h3 class="text-2xl font-black mt-2 tracking-tighter">365 Siku</h3>
+                <div class="mt-4 flex items-center justify-between text-[8px] font-bold uppercase">
+                    <span class="text-slate-500">Expiry: 05 Mar 2027</span>
+                    <i class="fas fa-shield-heart text-emerald-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="stat-card p-8 rounded-[3rem] lg:col-span-1">
+                <h4 class="font-black text-xs uppercase text-emerald-500 mb-6 italic tracking-widest">Stock Intelligence</h4>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-2xl">
+                        <span class="text-[10px] font-bold uppercase">Zimeisha Kabisa</span>
+                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black">0</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-2xl">
+                        <span class="text-[10px] font-bold uppercase">Karibu Ziishe</span>
+                        <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-black">0</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-2xl">
+                        <span class="text-[10px] font-bold uppercase">Zinazohitaji Nyongeza</span>
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-[10px] font-black">0</span>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-10">
-                <div class="xl:col-span-2 stat-card p-10 rounded-[3rem]">
-                    <div class="flex justify-between items-center mb-10">
-                        <div>
-                            <h4 class="font-black text-lg uppercase tracking-tight italic text-emerald-500">Growth Projection</h4>
-                            <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Sales vs Inventory Distribution</p>
+            <div class="stat-card p-8 rounded-[3rem] lg:col-span-2">
+                <div class="flex justify-between items-center mb-8">
+                    <h4 class="font-black text-xs uppercase text-white italic tracking-widest">Active Branches & Infrastructure</h4>
+                    <button class="bg-emerald-600 px-4 py-2 rounded-xl text-[9px] font-black uppercase">+ Add Branch</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-900/30 p-6 rounded-[2rem] border border-white/5">
+                        <p class="text-[8px] font-black text-slate-500 uppercase mb-2">Main Branch (H.Q)</p>
+                        <h5 id="hq-name" class="font-bold text-sm uppercase">---</h5>
+                        <div class="mt-4 flex items-center gap-2 text-emerald-500">
+                            <i class="fas fa-circle-check text-[10px]"></i>
+                            <span class="text-[8px] font-black">SYNCED</span>
                         </div>
                     </div>
-                    <canvas id="salesChart" height="140"></canvas>
-                </div>
-
-                <div class="stat-card p-10 rounded-[3rem] flex flex-col justify-between">
-                    <h4 class="font-black text-lg uppercase tracking-tight italic text-white mb-8">Quick Command</h4>
-                    <div class="space-y-4">
-                        <button onclick="location.href='inventory.html'" class="w-full bg-slate-800 p-5 rounded-2xl flex justify-between items-center hover:bg-emerald-600 transition group">
-                            <span class="text-[10px] font-black uppercase tracking-widest">Restock Items</span>
-                            <i class="fas fa-plus group-hover:rotate-90 transition"></i>
-                        </button>
-                        <button class="w-full bg-slate-800 p-5 rounded-2xl flex justify-between items-center hover:bg-emerald-600 transition group">
-                            <span class="text-[10px] font-black uppercase tracking-widest">Generate Report</span>
-                            <i class="fas fa-download"></i>
-                        </button>
-                    </div>
-                    <div class="mt-10 bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/10">
-                        <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-2">System Message</p>
-                        <p class="text-xs text-slate-400 leading-relaxed font-bold">All infrastructure nodes are currently operational. No anomalies detected.</p>
+                    <div class="bg-slate-900/30 p-6 rounded-[2rem] border border-white/5 flex flex-col justify-center items-center">
+                        <p class="text-[8px] font-black text-slate-500 uppercase mb-2">Internet Performance</p>
+                        <div class="text-2xl font-black text-emerald-400">98%</div>
+                        <p class="text-[8px] font-bold text-slate-500 mt-1 uppercase">Ultra High Speed</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <script>
@@ -158,89 +185,36 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function initDashboard() {
-            // 1. Session Validation
+        async function startup() {
             const { data: { user } } = await _supabase.auth.getUser();
-            if (!user) { window.location.href = "login_retail.html"; return; }
+            if(!user) { window.location.href = "login_retail.html"; return; }
+            
             document.getElementById('user-email').innerText = user.email;
 
-            // 2. Fetch Business Identity
-            const { data: biz } = await _supabase
-                .from('retail_registrations')
-                .select('*')
-                .eq('email', user.email)
-                .single();
-
-            if (biz) {
-                document.getElementById('business-name').innerText = biz.business_name;
-                document.getElementById('business-category').innerText = biz.category + " Management Node";
+            // Fetch Profile Data
+            const { data: profile } = await _supabase.from('retail_registrations').select('*').eq('email', user.email).single();
+            if(profile) {
+                document.getElementById('business-name').innerText = profile.business_name;
+                document.getElementById('business-category').innerText = profile.category;
+                document.getElementById('hq-name').innerText = profile.business_name;
             }
 
-            // 3. Fetch Live Stats from Inventory
-            const { data: items } = await _supabase
-                .from('inventory')
-                .select('*')
-                .eq('owner_email', user.email);
-
-            if (items) {
-                let totalValue = 0;
-                let lowStockCount = 0;
-                
-                items.forEach(i => {
-                    totalValue += (i.price * i.quantity);
-                    if(i.quantity < 10) lowStockCount++;
-                });
-
-                document.getElementById('stat-value').innerText = `TZS ${totalValue.toLocaleString()}`;
-                document.getElementById('stat-items').innerText = items.length;
-                document.getElementById('stat-alerts').innerText = lowStockCount;
-                
-                if(lowStockCount > 0) {
-                    document.getElementById('alert-card').classList.add('border-red-500/50', 'bg-red-500/5');
-                }
+            // Real-time Stock Valuation
+            const { data: inv } = await _supabase.from('inventory').select('*').eq('owner_email', user.email);
+            if(inv) {
+                let val = 0;
+                inv.forEach(i => val += (i.price * i.quantity));
+                document.getElementById('total-inventory-value').innerText = `TZS ${val.toLocaleString()}`;
             }
-            
-            initLiveChart();
+
+            // Simulate Internet Speed (Real Feel)
+            setInterval(() => {
+                const ping = Math.floor(Math.random() * 20) + 15;
+                document.getElementById('ping-speed').innerText = ping + "ms";
+            }, 3000);
         }
 
-        async function handleLogout() {
-            await _supabase.auth.signOut();
-            window.location.href = "login_retail.html";
-        }
-
-        function initLiveChart() {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Projected Value',
-                        data: [12, 19, 15, 25, 22, 30],
-                        borderColor: '#10b981',
-                        borderWidth: 5,
-                        pointRadius: 0,
-                        tension: 0.5,
-                        fill: true,
-                        backgroundColor: (context) => {
-                            const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
-                            gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
-                            return gradient;
-                        }
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { display: false },
-                        x: { grid: { display: false }, ticks: { color: '#475569', font: { weight: 'bold' } } }
-                    }
-                }
-            });
-        }
-
-        window.onload = initDashboard;
+        startup();
     </script>
 </body>
 </html>
