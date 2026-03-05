@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Login | Docta Mee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #ffffff; }
+        .login-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-dark {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .input-dark:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+            outline: none;
+        }
+        .loader { border-top-color: #10b981; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="mb-10 text-center">
+        <div class="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl mx-auto mb-4">
+            <i class="fas fa-lock text-2xl text-white"></i>
+        </div>
+        <h1 class="text-3xl font-black italic tracking-tighter">docta.mee <span class="text-emerald-400 not-italic">Secure</span></h1>
+    </div>
+
+    <div class="login-card w-full max-w-md p-10 md:p-12 rounded-[3rem] shadow-2xl">
+        <div class="mb-8">
+            <h2 class="text-2xl font-black uppercase tracking-tight">Welcome Back</h2>
+            <p id="status-msg" class="text-slate-400 text-xs font-bold mt-2 uppercase tracking-widest">Identify yourself to continue</p>
+        </div>
+
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 block mb-2 ml-1">Admin Email</label>
+                <input type="email" id="email" placeholder="name@enterprise.com" required 
+                    class="input-dark w-full p-4 rounded-2xl text-white font-medium">
+            </div>
+
+            <div>
+                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 block mb-2 ml-1">Secure Password</label>
+                <input type="password" id="password" placeholder="••••••••••••" required 
+                    class="input-dark w-full p-4 rounded-2xl text-white font-medium">
+            </div>
+
+            <button type="submit" id="login-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl transition-all flex items-center justify-center gap-3">
+                <span id="btn-text">Authorize Access</span>
+                <div id="btn-loader" class="hidden loader w-5 h-5 border-2 border-white rounded-full"></div>
+            </button>
+
+            <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest mt-6">
+                <a href="signup_retail.html" class="text-slate-500 hover:text-emerald-400">Create Account</a>
+                <a href="#" class="text-emerald-500/50 hover:text-emerald-400">Forgot Password?</a>
+            </div>
+        </form>
+    </div>
+
+    <footer class="mt-12 opacity-20 text-[9px] font-black uppercase tracking-[1em]">
+        Docta Mee Infrastructure © 2026
+    </footer>
+
+    <script>
+        // SUPABASE CONFIG (Using your keys)
+        const SUPABASE_URL = "https://lhviiczzlctaocngofbq.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodmlpY3p6bGN0YW9jbmdvZmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDYyMjksImV4cCI6MjA4ODI4MjIyOX0.e1-M8ATbS4kk2Fsw_XgyQGLtFNUz6vTEpRjFGbPRF7M";
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoader = document.getElementById('btn-loader');
+        const statusMsg = document.getElementById('status-msg');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // UI Loading
+            loginBtn.disabled = true;
+            btnLoader.classList.remove('hidden');
+            btnText.innerText = "Authenticating...";
+            statusMsg.innerText = "Connecting to Secure Server...";
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const { data, error } = await _supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                // SUCCESS: Redirect to Dashboard
+                statusMsg.innerText = "Access Granted! Redirecting...";
+                statusMsg.classList.replace('text-slate-400', 'text-emerald-400');
+                
+                setTimeout(() => {
+                    window.location.href = "dashboard.html"; // Ukurasa wa ndani wa biashara
+                }, 1500);
+
+            } catch (error) {
+                statusMsg.innerText = "Access Denied: " + error.message;
+                statusMsg.classList.replace('text-slate-400', 'text-red-500');
+                loginBtn.disabled = false;
+                btnLoader.classList.add('hidden');
+                btnText.innerText = "Authorize Access";
+            }
+        });
+    </script>
+</body>
+</html>
